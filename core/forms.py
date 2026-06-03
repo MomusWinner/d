@@ -84,27 +84,21 @@ class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
         fields = [
-            "user",
             "pickup_point",
             "order_date",
             "delivery_date",
             "status",
         ]
         labels = {
-            "user": "Пользователь",
             "order_date": "Дата заказа",
             "delivery_date": "Дата доставки",
             "status": "Статус",
             "pickup_point": "Пункт выдачи",
-
         }
+
         widgets = {
-            "order_date": forms.DateTimeInput(attrs={
-                'type': 'datetime-local',
-            }),
-            "delivery_date": forms.DateTimeInput(attrs={
-                'type': 'datetime-local',
-            }),
+            "order_date": forms.SelectDateWidget(),
+            "delivery_date": forms.SelectDateWidget(),
             "status": forms.Select(),
         }
 

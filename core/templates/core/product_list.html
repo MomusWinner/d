@@ -5,7 +5,7 @@
 {% block h1 %}Каталог товаров{% endblock %}
 
 {% block content %}
-{% if user.role.name == "admin" or user.role.name == "manager" %}
+{% if user.role.name == "Администратор" or user.role.name == "Менеджер" %}
 <div>
     <form method="get" style="display: flex;">
         <div>
@@ -50,13 +50,13 @@
         </div>
 
 
-        {% if user.role.name == 'admin' or user.role.name == 'manager' %}
+        {% if user.role.name == 'Администратор' or user.role.name == 'Менеджер' %}
         <div style="margin-left: 10px;">
             <a href="{% url 'order_list' %}" class="btn" style="background-color: #5bc0de;">Заказы</a>
         </div>
         {% endif %}
 
-        {% if user.role.name == 'admin' %}
+        {% if user.role.name == 'Администратор' %}
         <div style="margin-left: auto;">
             <a href="{% url 'product_create' %}" class="btn">Добавить товар</a>
         </div>
@@ -94,7 +94,7 @@
             Единица измерения: {{ product.unit }}
             <br />
             Количество на складе: {{ product.quantity }}
-            {% if user.role.name == "admin" %}
+            {% if user.role.name == "Администратор" %}
             <br><a href="{% url 'product_edit' product.id %}">Редактировать</a>
             <br><a href="{% url 'product_delete' product.id %}">Удалить</a>
             {% endif %}

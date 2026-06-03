@@ -57,17 +57,17 @@ class Product(models.Model):
     
     def __str__(self) -> str:
         return f"{self.article} - {self.name}"
-
+    
 
 STATUS_CHOICES = [
-    ('new', 'Новый'),
-    ('сompleted', 'Завершен'),
+    ('Новый', 'Новый'),
+    ('Завершен', 'Завершен'),
 ]
 
 class Order(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
-    order_date = models.DateTimeField() #auto_now_add=True
-    delivery_date = models.DateTimeField()
+    client_name = models.CharField(max_length=255)
+    order_date = models.DateField() #auto_now_add=True
+    delivery_date = models.DateField()
     pickup_point = models.ForeignKey(PickupPoint, on_delete=models.CASCADE)
     status = models.CharField(max_length=255, choices=STATUS_CHOICES, default="Новый")
     pickup_code = models.IntegerField()

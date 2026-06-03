@@ -7,7 +7,7 @@
 {% block content %}
 
 <div>
-    {% if user.role.name == 'admin' %}
+    {% if user.role.name == 'Администратор' %}
         <div style="margin-left: auto;">
             <a href="{% url 'order_create' %}" class="btn">Добавить заказ</a>
         </div>
@@ -33,7 +33,7 @@
             Дата заказа: {{ order.order_date }}
             <br />
             
-            {% if user.role.name == "admin" %}
+            {% if user.role.name == "Администратор" %}
             <br><a href="{% url 'order_edit' order.id %}">Редактировать заказ</a>
             <br><a href="{% url 'order_delete' order.id %}">Удалить</a>
             {% endif %}
