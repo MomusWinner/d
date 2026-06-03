@@ -42,10 +42,20 @@
 
         <div>
             <label>Сортировка (кол-во):</label><br>
-            <select name="sort" onchange="this.form.submit()">
+            <select name="sort_quantity" onchange="this.form.submit()">
                 <option value="">Без сортировки</option>
-                <option value="asc" {% if current_sort == "asc" %}selected{% endif %}>По возрастанию</option>
-                <option value="desc" {% if current_sort == "desc" %}selected{% endif %}>По убыванию</option>
+                <option value="asc" {% if current_sort_quantity == "asc" %}selected{% endif %}>По возрастанию</option>
+                <option value="desc" {% if current_sort_quantity == "desc" %}selected{% endif %}>По убыванию</option>
+            </select>
+        </div>
+
+        
+        <div>
+            <label>Сортировка цена:</label><br/>
+            <select name="sort_price" onchange="this.form.submit()">
+                <option value="">—</option>
+                <option value="asc" {% if current_sort_price == "asc" %}selected{% endif %}>По возрастанию</option>
+                <option value="desc" {% if current_sort_price == "desc" %}selected{% endif %}>По убыванию</option>
             </select>
         </div>
 

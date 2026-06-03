@@ -51,11 +51,22 @@ class ProductListView(ListView):
             elif discount_range == "30-100":
                 queryset = queryset.filter(discount__gte=30, discount__lte=100)
 
-        sort = self.request.GET.get("sort", "")
-        if sort == "asc":
-            queryset = queryset.order_by("quantity")
-        elif sort == "desc":
-            queryset = queryset.order_by("-quantity")
+        qeury_field_sort = {"sort_quantity": "quantity", "sort_price" : "price"}
+        sort_fields = list[str]()
+
+        for key, value in qeury_field_sort.items():
+            sort = self.request.GET.get(key, "")
+            if sort == "asc":
+                print(value)
+                sort_fields.append(value)
+            elif sort == "desc":
+                sort_fields.append("-" + value)
+
+        print("fields", sort_fields)
+        print(*sort_fields)
+        queryset = queryset.order_by(*sort_fields)
+  
+
         return queryset
     
 
@@ -65,7 +76,9 @@ class ProductListView(ListView):
         context["current_search"] = self.request.GET.get("search", "")
         context["current_supplier"] = self.request.GET.get("supplier", "")
         context["current_discount_range"] = self.request.GET.get("discount_range", "")
-        context["current_sort"] = self.request.GET.get("sort", "")
+        context["current_sort_quantity"] = self.request.GET.get("sort_quantity", "")
+        context["current_sort_price"] = self.request.GET.get("sort_price", "")
+
 
         return context
 
