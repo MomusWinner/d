@@ -1,0 +1,81 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+{% if is_edit %}Редактирование заказа{% else %}Добавление заказа{% endif %}
+{% endblock %}
+
+{% block h1 %}
+{% if is_edit %}Редактирование заказа: {{ object.id }}{% else %}Новый заказ{% endif %}
+{% endblock %}
+
+
+{% comment %} {% block content %}
+<div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Основная форма заказа -->
+        {{ form.as_p }}
+        <hr>
+        <!-- Товары в заказе -->
+        <h3>Товары в заказе</h3>
+        {% for formset in inlines %}
+        {{ formset }}
+        {% endfor %}
+        <br>
+        <button type="submit" class="btn">Сохранить заказ</button>
+    </form>
+</div>
+{% endblock %} {% endcomment %}
+
+{% block content %}
+<div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <!-- Основная форма заказа -->
+        {{ form.as_p }}
+        <hr>
+        
+        <!-- Товары в заказе -->
+        <h3>Товары в заказе</h3>
+        
+        {{ formset.management_form }}
+        
+        <table border="1" style="width: 100%; border-collapse: collapse;">
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Количество</th>
+                    <th>Действие</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for form in formset %}
+                <tr style="border: 1px solid #ddd;">
+                    <td>
+                        {{ form.id }}
+                        {{ form.product }}
+                        {{ form.product.errors }}
+                    </td>
+                    <td>
+                        {{ form.count }}
+                        {{ form.count.errors }}
+                    </td>
+                    <td>
+                        {% if form.instance.pk %}
+                            <label>
+                                {{ form.DELETE }} Удалить
+                            </label>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <br>
+        <button type="submit" class="btn">Сохранить заказ</button>
+    </form>
+</div>
+{% endblock %}

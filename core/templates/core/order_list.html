@@ -1,0 +1,47 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Список заказов - ООО «Обувь»{% endblock %}
+{% block h1 %}Список заказов{% endblock %}
+
+{% block content %}
+
+<div>
+    {% if user.role.name == 'admin' %}
+        <div style="margin-left: auto;">
+            <a href="{% url 'order_create' %}" class="btn">Добавить заказ</a>
+        </div>
+    {% endif %}
+    <br/>
+    {% for order in orders %}
+    <div class="product-card">
+        <div class="details">
+            {% comment %} <strong>{{ product.category }} | {{ product.name }}</strong> {% endcomment %}
+            <b>
+            {% for item in order.items.all %}
+                {{ item.product.article }} {{ item.count }} {{ item.product.unit }}
+            {% empty %}
+                Нет товаров в заказе
+            {% endfor %}
+            </b>
+            
+            <br />
+            Статус заказа: {{ order.status }}
+            <br />
+            Адрес пункта выдачи: {{ order.pickup_point }}
+            <br />
+            Дата заказа: {{ order.order_date }}
+            <br />
+            
+            {% if user.role.name == "admin" %}
+            <br><a href="{% url 'order_edit' order.id %}">Редактировать заказ</a>
+            <br><a href="{% url 'order_delete' order.id %}">Удалить</a>
+            {% endif %}
+        </div>
+        <div class="sale">{{ order.delivery_date }}</div>
+    </div>
+    {% empty %}
+    <p>Заказы не найдены.</p>
+    {% endfor %}
+</div>
+{% endblock %}

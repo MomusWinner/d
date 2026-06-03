@@ -1,0 +1,19 @@
+{% extends 'core/base.html' %}
+
+{% block title %}
+{% if is_edit %}Редактирование товара{% else %}Добавление товара{% endif %}
+{% endblock %}
+
+{% block h1 %}
+{% if is_edit %}Редактирование товара: {{ object.article }}{% else %}Новый товар{% endif %}
+{% endblock %}
+
+{% block content %}
+<div>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form }}
+        <button type="submit" class="btn">Сохранить</button>
+    </form>
+</div>
+{% endblock %}
