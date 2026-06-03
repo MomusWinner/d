@@ -4,9 +4,10 @@ from typing import Any
 from django.contrib import messages
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.contrib.auth.views import LoginView
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, View
 from django.views.generic.edit import BaseDeleteView
 
 from core.forms import OrderForm, OrderProductFormSet, ProductForm
@@ -74,7 +75,16 @@ class AdminRequiredMixin(UserPassesTestMixin):
         return (
             self.request.user.is_authenticated
             and self.request.user.role
-            and self.request.user.role.name == "admin"
+            and self.request.user.role.name == "Администратор"
+        )
+
+
+class ManagerAdminRequiredMixin(UserPassesTestMixin):
+    def test_func(self):
+        return (
+            self.request.user.is_authenticated
+            and self.request.user.role
+            and self.request.user.role.name in ("Менеджер", "Администратор")
         )
 
 
@@ -112,13 +122,19 @@ class ProductUpdateView(AdminRequiredMixin, ProductCreateUpdateMixin, UpdateView
         return super().form_valid(form)
 
 
-class ProductDeleteView(DeleteView):
-    model = Product
-    template_name = "core/confirm_delete.html"
-    success_url = reverse_lazy("product_list")
+class ProductDeleteView(AdminRequiredMixin, View):
+    def post(self, request: HttpRequest, pk: int, *args, **kwargs) -> HttpResponse:
+        product = Product.objects.filter(pk=pk).first()
+        if not product:
+            return redirect("product_list")
+        if OrderProduct.objects.filter(product=product).exists():
+            messages.error(request, "Товар нельзя удалить, поскольку он присудствует в заказе.")
+            return redirect("product_list")
+        product.delete()
+        return redirect("product_list")
 
 
-class OrderListView(ListView):
+class OrderListView(ManagerAdminRequiredMixin, ListView):
     template_name = "core/order_list.html"
     model = Order
     context_object_name = "orders"
@@ -156,7 +172,7 @@ class OrderUpdateView(UpdateWithInlinesView):
         return context  
 
 
-class OrderDeleteView(DeleteView):
+class OrderDeleteView(DeleteView, AdminRequiredMixin):
     model = Order
     template_name = "core/confirm_delete.html"
     success_url = reverse_lazy("order_list")

@@ -96,7 +96,12 @@
             Количество на складе: {{ product.quantity }}
             {% if user.role.name == "Администратор" %}
             <br><a href="{% url 'product_edit' product.id %}">Редактировать</a>
-            <br><a href="{% url 'product_delete' product.id %}">Удалить</a>
+            {% comment %} <br><a href="{% url 'product_delete' product.id %}">Удалить</a> {% endcomment %}
+
+            <form method="post" action="{% url 'product_delete' product.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn">Удалить товар</button>
+            </form>
             {% endif %}
         </div>
         <div class="sale">{{ product.discount }}%</div>
