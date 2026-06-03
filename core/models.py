@@ -1,6 +1,9 @@
+import os
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+from PIL import Image
+from io import BytesIO
 
 class Role(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="Name of role")
@@ -49,7 +52,27 @@ class Product(models.Model):
         except:
             pass
 
+        
+        if self.photo:
+            img = Image.open(self.photo)
+            img.thumbnail((300, 200))
+
+            output = BytesIO()
+            img.save(output, img.format)
+            output.seek(0)
+            self.photo.save(
+                os.path.basename(self.photo.name),
+                output,
+                save=False
+            )
+
+
         super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        if self.photo:
+            self.photo.delete(save=False)
+        super().delete(*args, **kwargs)
 
     @property
     def final_price(self):
